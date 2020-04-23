@@ -367,7 +367,7 @@ class Sudoku {
 					{ $:'label', _: [ { $:'input', attr:{ type:'button', value: '-' }, events:
 					[ ['click',event=>{inhibitEvent(event);id('sd-complexity').value++;id('sd-complexity').dispatchEvent(new Event('change') );}] ] } ] },
 					{ $:'label', _: [ { $:'input', attr:{ type:'button', value: '+' }, events:
-					[ ['click',event=>{inhibitEvent(event);id('sd-complexity').value++;id('sd-complexity').dispatchEvent(new Event('change') );}] ] } ] },
+					[ ['click',event=>{inhibitEvent(event);id('sd-complexity').value--;id('sd-complexity').dispatchEvent(new Event('change') );}] ] } ] },
 					],
 					events: [
                         ['submit',inhibitEvent]
