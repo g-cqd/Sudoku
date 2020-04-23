@@ -108,7 +108,7 @@ picture {
     row-gap: 3px;
     flex: 1 1 auto;
     margin: 0 1.5rem 1.5rem 0;
-    max-width: calc( 80vw - 18px );
+    max-width: calc( 80vw - 12px );
 }
 
 .sd-panel {
@@ -171,8 +171,8 @@ picture {
 input {
     height: 40px;
     width: 40px;
-    max-width: calc( ( 80vw - 18px ) / 9 );
-    max-height: calc( ( 80vw - 18px ) / 9 );
+    max-width: calc( ( 80vw - 12px ) / 9 );
+    max-height: calc( ( 80vw - 12px ) / 9 );
     overflow: hidden;
     position: relative;
 }
