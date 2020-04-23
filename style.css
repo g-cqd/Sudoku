@@ -108,7 +108,7 @@ picture {
     row-gap: 3px;
     flex: 1 1 auto;
     margin: 0 1.5rem 1.5rem 0;
-    max-width: calc( 80vw - 6px );
+    max-width: calc( 80vw - 18px );
 }
 
 .sd-panel {
@@ -171,8 +171,8 @@ picture {
 input {
     height: 40px;
     width: 40px;
-    max-width: calc( ( 80vw - 6px ) / 9 );
-    max-height: calc( ( 80vw - 6px ) / 9 );
+    max-width: calc( ( 80vw - 18px ) / 9 );
+    max-height: calc( ( 80vw - 18px ) / 9 );
     overflow: hidden;
     position: relative;
 }
@@ -275,6 +275,10 @@ input:focus {
     width: 100%;
 }
 
+.sd-label-wrap > :first-child {
+    margin-right: 1rem;
+}
+
 .sd-pan-input {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -294,13 +298,14 @@ input:focus {
 .sd-button {
     -webkit-appearance: none;
     background-color: #6d5b50;
-    border-radius: 4pt;
+    border-radius: .2rem;
     border: 2px solid #6d5b50;
     color: white;
     font-size: 1.5rem;
     font-feature-settings: 'case';
     font-weight: bold;
-    line-height: 2rem;
+    height: 2.5rem;
+    width: 2.5rem;
     text-align: center;
 }
 
