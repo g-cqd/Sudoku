@@ -178,12 +178,12 @@ class Cell {
 		'use strict';
 		this.props.readonly = value;
 		if (this.readonly) {
-		    addClass( this.input, 'sd-readonly' );
-		    this.input.setAttribute('readonly', true);
+			addClass( this.input, 'sd-readonly' );
+			this.input.setAttribute('readonly', true);
 		}
 		else {
-		    removeClass(this.input, 'sd-readonly');
-		    this.input.removeAttribute('readonly');
+			removeClass(this.input, 'sd-readonly');
+			this.input.removeAttribute('readonly');
 		}
 	}
 	get readonly() {
@@ -296,19 +296,19 @@ class Sudoku {
 	at(c) {
 		'use strict';
 		if (typeof c === 'number') {
-            return this.grid[c];
+			return this.grid[c];
 		}
 		else
-        if ('x' in c && 'y' in c) {
-            return this.grid[Coord.resolvePosition(c)];
-        }
+		if ('x' in c && 'y' in c) {
+			return this.grid[Coord.resolvePosition(c)];
+		}
 	}
 	valueAt(c) {
-        return this.at(c).value;
+		return this.at(c).value;
 	}
 	createNewWorker() {
 		this.props.worker = new PromiseWorker('sudoku_back.js');
-
+		
 	}
 	async init(c) {
 		c = c || 10;
@@ -344,7 +344,8 @@ class Sudoku {
 				$: 'aside',
 				class: ['sd-panel'],
 				_: [{
-					$: 'form',
+					$: 'div',
+					class: ['sd-pan-block'],
 					_: [{
 						$: 'label',
 						_: [
@@ -353,7 +354,7 @@ class Sudoku {
 								$: 'input',
 								id: "sd-complexity",
 								class: ['sd-pan-input'],
-								attr: { type: 'number', min: '0', max: '9', value: 10 - this.complexity },
+								attr: { type: 'number', min: 0, max: 9, value: 10 - this.complexity },
 								events: [
 									['change', event => {
 										inhibitEvent(event);
@@ -364,50 +365,66 @@ class Sudoku {
 							}
 						]
 					},
-					{ $:'label', _: [ { $:'input', attr:{ type:'button', value: '-' }, events:
-					[ ['click',event=>{inhibitEvent(event);id('sd-complexity').value++;id('sd-complexity').dispatchEvent(new Event('change') );}] ] } ] },
-					{ $:'label', _: [ { $:'input', attr:{ type:'button', value: '+' }, events:
-					[ ['click',event=>{inhibitEvent(event);id('sd-complexity').value--;id('sd-complexity').dispatchEvent(new Event('change') );}] ] } ] },
-					],
-					events: [
-                        ['submit',inhibitEvent]
-					]
-				}]
+					{ class:['sd-label-wrap'], _:[
+					{ $:'label', _: [ { $:'input', class:['sd-button'], attr:{ type:'button', value: '-' }, events:
+					[ ['click',event=>{
+						inhibitEvent(event);
+						const cInput = id('sd-complexity');
+						if ( this.complexity < 10 ) {
+						    cInput.value--;
+						    cInput.dispatchEvent(new Event('change') );	
+						}
+					}] ] } ] },
+					{ $:'label', _: [ { $:'input', class:['sd-button'], attr:{ type:'button', value: '+' }, events:
+					[ ['click',event=>{
+						inhibitEvent(event);
+						const cInput = id('sd-complexity');
+						if ( this.complexity > 1 ) {
+						    cInput.value++;
+						    cInput.dispatchEvent(new Event('change') );	
+						}
+					}] ] } ] }
+					]},
+				],
+				events: [
+					['submit',inhibitEvent]
+				]
 			}]
-		});
-	}
-	insert() {
-		this.parent.appendChild(this.html());
-	}
-	async setCell(c, value) {
-		return await this.worker.postMessage({command:'set',attr:c,args:[value]})
-	}
-	async checkColumn(c) {
-		const { x } = c;
-		const column = await this.worker.postMessage({ command: 'call', func: 'columns', args: [x] });
-		return await this.helper.postMessage({ command: 'call', func: 'unicity', args: [column] });
-	}
-	async checkRow(c) {
-		const { y } = c;
-		const row = await this.worker.postMessage({ command: 'call', func: 'rows', args: [y] });
-		return await this.helper.postMessage({ command: 'call', func: 'unicity', args: [row] });
-	}
-	async checkSquare(c) {
-		const { x, y } = c;
-		const square = await this.worker.postMessage({ command: 'call', func: 'squares', args: [{ x, y }] });
-		return await this.helper.postMessage({ command: 'call', func: 'unicity', args: [square] });
-	}
-	async checkCell(c) {
-		const self = this;
-		const [i, j, k] = await Promise.all([
-			self.checkColumn(c),
-			self.checkRow(c),
-			self.checkSquare(c)
-		]);
-		const bool = i && j && k;
-		console.log('grid :', bool);
-		return bool;
-	}
+		}]
+	});
+}
+insert() {
+	this.parent.appendChild(this.html());
+}
+async setCell(c, value) {
+	return await this.worker.postMessage({command:'set',attr:c,args:[value]})
+}
+async checkColumn(c) {
+	const { x } = c;
+	const column = await this.worker.postMessage({ command: 'call', func: 'columns', args: [x] });
+	return await this.helper.postMessage({ command: 'call', func: 'unicity', args: [column] });
+}
+async checkRow(c) {
+	const { y } = c;
+	const row = await this.worker.postMessage({ command: 'call', func: 'rows', args: [y] });
+	return await this.helper.postMessage({ command: 'call', func: 'unicity', args: [row] });
+}
+async checkSquare(c) {
+	const { x, y } = c;
+	const square = await this.worker.postMessage({ command: 'call', func: 'squares', args: [{ x, y }] });
+	return await this.helper.postMessage({ command: 'call', func: 'unicity', args: [square] });
+}
+async checkCell(c) {
+	const self = this;
+	const [i, j, k] = await Promise.all([
+		self.checkColumn(c),
+		self.checkRow(c),
+		self.checkSquare(c)
+	]);
+	const bool = i && j && k;
+	console.log('grid :', bool);
+	return bool;
+}
 }
 
 const s = new Sudoku({ htmlElement: id('sudoku'), layout: 'grid' });
